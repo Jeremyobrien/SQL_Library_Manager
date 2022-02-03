@@ -2,6 +2,7 @@
   "name": "sql-library-manager",
   "version": "0.0.0",
   "private": true,
+  "main": "./bin/www",
   "scripts": {
     "start": "node ./bin/www"
   },
@@ -12,6 +13,7 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
+    "nodemon": "^2.0.15",
     "sequelize": "^6.15.0",
     "sequelize-cli": "^6.4.1",
     "sqlite3": "^5.0.2"
