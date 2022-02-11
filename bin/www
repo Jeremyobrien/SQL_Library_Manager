@@ -7,7 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('sql-library-manager:server');
 var http = require('http');
-var sequelize = require("../models").sequelize;
+var sequelize = require('../models').sequelize;
+
 /**
  * Get port from environment and store in Express.
  */
@@ -24,14 +25,8 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
- sequelize.sync().then(async function(){
+sequelize.sync().then( ()=> {
   server.listen(port);
-  try {
-  await sequelize.authenticate();
-  console.log('Connection has been established successfully.');
-} catch (error) {
-  console.error('Unable to connect to the database:', error);
-}
 });
 server.on('error', onError);
 server.on('listening', onListening);
