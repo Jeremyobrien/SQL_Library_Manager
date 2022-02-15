@@ -17,50 +17,57 @@ function asyncHandler(cb) {
 
   router.get('/', asyncHandler( async (req, res, next) => {
     try {
-      const results = await Book.findAll();
-      res.render('index', { results });
+      const books = await Book.findAll();
+      res.render('index', { books });
     } catch (err) {
       next(err)
     }
 }));
 
-router.get("/books/new", asyncHandler( async (req, res, next) => {
+router.get("/new", asyncHandler( async (req, res, next) => {
   try {
-    res.render("new_book")
+    res.render("new_book", {book:{}})
   } catch (err) {
     next(err)
   }
 }));
 
-router.post("books/new", asyncHandler( async (req, res, next) => {
+router.post("/new", asyncHandler( async (req, res, next) => {
+  let book;
   try {
-    const book = await Book.create(req.body);
-    res.redirect('/books', { book });
-  } catch (err) {
-    next(err)
+     book = await Book.create(req.body);
+    res.redirect(`/`);
+  } catch (error) {
+    if (error.name === "SequelizeValidationError"){
+      book = await Book.build(req.body);
+      res.render('new_book', { book, errors: error.errors});
+    } else {
+      throw error;
+    }
   }
 }));
 
-router.get("/books/:id", asyncHandler(async (req, res, next) => {
+router.get("/:id", asyncHandler(async (req, res, next) => {
     try{
-      const results = await Book.findByPk(req.params.id);
-      res.render('index', { results })
+      const book = await Book.findByPk(req.params.id);
+      res.render('show_book', { book })
     } catch (err) {
       next(err)
     }
 }));
 
-router.post("/books/:id", asyncHandler( async (req, res, next) => {
+router.post("/:id/edit", asyncHandler( async (req, res, next) => {
     try {
       const book = await Book.findByPk(req.params.id);
-      res.render("update_book");
+      res.render("update_book", { book });
     } catch (err) {
       next(err)
     }
 }));
 
-router.post("/books/:id/delete", asyncHandler( async (req, res, next) => {
-
+router.post("/:id/delete", asyncHandler( async (req, res, next) => {
+  const book = await Book.findByPk(req.params.id);
+  res.render('tester', {book})
 }));
 
 
