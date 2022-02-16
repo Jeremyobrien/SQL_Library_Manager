@@ -1,34 +1,35 @@
 'use strict';
-// const {
-//   Model
-// } = require('sequelize');
+const {
+  Model,
+  Sequelize
+} = require('sequelize');
 
-const Sequelize = require('sequelize');
-
-module.exports = (sequelize, DataTypes) => {
-  class Book extends Sequelize.Model {
-
-  }
+module.exports = (sequelize) => {
+  class Book extends Model {};
   Book.init({
     title:{ 
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false,
       validate:{
-        msg:"Please enter a title"
+        notEmpty: {
+          msg:"Please enter a title"
+        }
       }
     },
     author:{
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false,
       validate:{
-        msg:"Please enter author's name"
+        notEmpty: {
+          msg:"Please enter author's name"
+        }
       }
     },
-    genre: DataTypes.STRING,
-    year: DataTypes.INTEGER
+    genre: Sequelize.STRING,
+    year: Sequelize.INTEGER,
   }, {
     sequelize,
-    modelName: 'Book'
+    modelName: 'Book',
   });
 
   return Book;
