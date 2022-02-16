@@ -55,7 +55,7 @@ app.use(function(err, req, res, next) {
     console.log("Global error handler called");
   }
   if (err.status === 404){
-    res.status(err.status).render('page_not_found', { err });
+    res.status(err.status).render('page-not-found', { err });
     }
   else {
       err.message = err.message || "Server Error. Please try again."
