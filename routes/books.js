@@ -37,7 +37,7 @@ router.post("/new", asyncHandler( async (req, res, next) => {
   try {
     book = await Book.create(req.body);
     res.redirect(`/books/${book.id}`);
-  } catch (error) {
+  } catch (error) {  
     if (error.name === "SequelizeValidationError"){
       book = await Book.build(req.body);
       res.render('new-book', { book, errors: error.errors});
@@ -48,46 +48,67 @@ router.post("/new", asyncHandler( async (req, res, next) => {
 }));
 
 router.get("/:id", asyncHandler(async (req, res, next) => {
-    try{
-      const book = await Book.findByPk(req.params.id);
-      res.render('show-book', { book })
-    } catch (err) {
-      next(err)
-    }
+
+  const book = await Book.findByPk(req.params.id);
+      if (book) {
+        res.render('show-book', { book })
+      } else {
+        next(createError(404));
+      }
 }));
 
 router.get("/:id/edit", asyncHandler( async (req, res, next) => {
-  try {
+ 
     const book = await Book.findByPk(req.params.id);
-    res.render("update-book", { book });
-  } catch (err) {
-    next(err)
-  }
+    if (book){
+      res.render("update-book", { book });
+    } else {
+      next(createError(404));
+    }
 }));
 
 router.post("/:id/edit", asyncHandler( async (req, res, next) => {
+    let book;
     try {
-      const book = await Book.findByPk(req.params.id)
-      await book.update(req.body)
-      res.redirect(`/books/${book.id}`);
-    } catch (err) {
-      next(err)
+      book = await Book.findByPk(req.params.id)
+      if (book){
+        await book.update(req.body)
+        res.redirect(`/books/${book.id}`);
+      } else {
+        next(createError(404));
+      }
+    } catch (error) {
+      if(error.name === "SequelizeValidationError") {
+        book = await Book.build(req.body);
+        book.id = req.params.id; // make sure correct book gets updated
+        res.render("update-book", { book, errors: error.errors})
+      } else {
+        throw error;
+      }
     }
+    
+      
 }));
 
 router.get("/:id/delete", asyncHandler( async (req, res, next) => {
-    try {
-      const book = await Book.findByPk(req.params.id)
-      res.render('update-book', {book})
-    } catch (err) {
-      next(err)
-    }
+
+      const book = await Book.findByPk(req.params.id);
+      if (book) {
+        res.render('update-book', {book})
+      } else {
+        next(createError(404));
+      }
 }))
 
 router.post("/:id/delete", asyncHandler( async (req, res, next) => {
+  
   const book = await Book.findByPk(req.params.id)
-  await book.destroy();
-  res.redirect('/books');
+  if (book) {
+    await book.destroy();
+    res.redirect('/books');
+  } else {
+    next(createError(404));
+  }
 }));
 
 
