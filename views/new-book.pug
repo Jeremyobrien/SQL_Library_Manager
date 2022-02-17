@@ -4,8 +4,8 @@ block main
     h1 New Book
     
     if(errors)
-        h2.errors Oops an error occurred!
-        ul.errors
+        h2.error Oops an error occurred!
+        ul.error
             each err in errors
                 li= err.message
 
