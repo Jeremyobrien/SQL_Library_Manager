@@ -3,7 +3,7 @@ const {
   Model,
   Sequelize
 } = require('sequelize');
-
+//Book Model
 module.exports = (sequelize) => {
   class Book extends Model {};
   Book.init({
