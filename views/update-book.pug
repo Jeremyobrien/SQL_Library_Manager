@@ -1,7 +1,7 @@
 extends layout
 
 block main
-    h1 Update Book
+    h1= book.title
 
     if(errors)
         h2.error Oops an error occurred!
@@ -9,7 +9,7 @@ block main
             each err in errors
                 li= err.message
 
-    form(action=`/books/${book.id}/edit`, method="post")
+    form(action=`/books/${book.id}`, method="post")
         p
             label(for='title') Title
             input#title(name='title' type='text' value= book.title)
